@@ -46,28 +46,27 @@ class BottleView:
             QUAD + SELECTED_BORDER * 2,
             y + QUAD * size + SELECTED_BORDER * 2,
         )
-        self.rect = self.draw_self()
+        self.rect = None
+        self.draw_self()
         logger.debug("Draw bottle %d, %d, %d, %d", *self.xy)
 
     def draw_self(self):
+        # flush any colors
         pygame.draw.rect(screen, BLACK, self.xy)
-        return pygame.draw.rect(
+        # draw self
+        self.rect = pygame.draw.rect(
             screen,
             GRAY,
             self.xy,
             3,
         )
+        self.draw_colors()
 
     def draw_colors(self):
-        height = self.xy[-1]
-        x = self.xy[0]
-        for color in self.bottle._container:
-            pygame.draw.rect(
-                screen,
-                GRAY,
-                self.xy,
-                3,
-            )
+        x, y, width, height = self.xy
+        for i, color in enumerate(self.bottle._container):
+            color_y = y + (self.bottle.size - i) * QUAD
+            pygame.draw.rect(screen, color, (x, color_y, QUAD, QUAD))
 
     def draw_selected(self):
         x, y, width, height = self.xy
@@ -77,7 +76,6 @@ class BottleView:
             self.selected_border,
             SELECTED_BORDER,
         )
-        pygame.display.update()
 
     def draw_deselected(self):
         x, y, width, height = self.xy
@@ -87,7 +85,6 @@ class BottleView:
             self.selected_border,
             SELECTED_BORDER,
         )
-        pygame.display.update()
 
 
 class ColorView:
@@ -133,6 +130,7 @@ def main():
     state = GameStateView(world=world)
 
     state.draw_bottles()
+    pygame.display.update()
 
     running: bool = True
     while running:
@@ -152,20 +150,27 @@ def main():
                     if b_view.rect.collidepoint(pos):
                         collided = True
                         logger.debug("[MAINLOOP] Colide with bottle %s", b_view.bottle)
-                        if state.selected_bottle:
+                        if state.selected_bottle and b_view is not state.selected_bottle:
 
                             logger.debug(
                                 "[MAINLOOP] Pour bottle %s to %s",
                                 state.selected_bottle.bottle,
                                 b_view.bottle,
                             )
+                            state.selected_bottle.bottle.pour_to(b_view.bottle)
+
+                            state.selected_bottle.draw_self()
+                            b_view.draw_self()
+
                             state.deselect()
                         else:
                             logger.debug("[MAINLOOP] Selected bottle %s", b_view.bottle)
                             state.select(b_view)
+                        pygame.display.update()
                 # not collided but click
                 if not collided:
                     state.deselect()
+                    pygame.display.update()
 
         clock.tick(60)
 

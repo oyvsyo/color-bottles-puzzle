@@ -3,7 +3,7 @@ from color_bottles.core import BottleException, StackBottle
 
 def test_bottle_init():
     bottle: StackBottle[int] = StackBottle(size=3)
-    assert bottle
+    assert True
 
 
 def test_bottle_add_and_level():

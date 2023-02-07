@@ -63,6 +63,13 @@ class StackBottle(Generic[T]):
             logger.debug("Added %s to bottle: %s", element, self)
             self._container.append(element)
 
+    def insert(self, element: T):
+        if self.is_full:
+            logger.debug("Bottle is full %s", self)
+        else:
+            logger.debug("Added %s to bottle: %s", element, self)
+            self._container.append(element)
+
     def can_pour(self, another_bottle: "StackBottle") -> bool:
         if self.is_empty:
             logger.debug("Source bottle is empty %s", self)
@@ -106,7 +113,7 @@ class World(Generic[T]):
         ]
         for bottle in self.bottles[: -config.n_empty]:
             for _ in range(bottle.size):
-                bottle.add(color_set[random.randint(0, config.n_collors)])
+                bottle.insert(color_set[random.randint(0, config.n_collors)])
 
     @property
     def is_done(self) -> bool:
