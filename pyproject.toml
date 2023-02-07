@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "color-bottles"
+version = "0.1.0"
+description = "Puzzle game"
+authors = ["Your Name <you@example.com>"]
+license = ""
+readme = "README.md"
+packages = [{include = "color_bottles"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+
+# Formatters
+black = "^22.1"
+tomli = "*" # missing 'black' dependency
+isort = "^5.10"
+
+# Linters
+mypy = "~0.990"
+types-setuptools = "^65.7.0.3"  # pkg_config mypy
+pylint = "^2.10"
+pydocstyle = "^6.1"
+
+# Testing
+pytest = "^7.1"
+pytest-mock = "^3.10.0"
+pytest-cov = "^4.0.0"
+coverage = "^7.0.5"
+
+
+[tool.black]
+
+target-version = ["py37", "py38", "py39", "py310", "py311"]
+# in respect for 13" monitors 2 side split
+line-length = 100
+
+[tool.isort]
+
+profile = "black"
+
+[tool.mypy]
+
+ignore_missing_imports = true
+no_implicit_optional = true
+check_untyped_defs = true
+namespace_packages = true
+
+cache_dir = ".cache/mypy/"
+
+[tool.pytest.ini_options]
+
+addopts = """
+--strict-markers
+-r sxX
+--show-capture=log
+--no-cov-on-fail
+"""
+
+cache_dir = ".cache/pytest/"
+
+markers = []
+
+[tool.coverage.run]
+data_file = ".cache/coverage/coverage.sqlite"
+
+[tool.coverage.html]
+directory = ".cache/coverage/htmlcov"
+
+[tool.coverage.xml]
+output = ".cache/coverage/coverage.xml"
+
+[build-system]
+
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
