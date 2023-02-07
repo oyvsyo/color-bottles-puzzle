@@ -5,7 +5,7 @@ description = "Puzzle game"
 authors = ["Your Name <you@example.com>"]
 license = ""
 readme = "README.md"
-packages = [{include = "color_bottles"}]
+packages = [{ include = "color_bottles" }]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -14,12 +14,12 @@ python = "^3.7"
 
 # Formatters
 black = "^22.1"
-tomli = "*" # missing 'black' dependency
+tomli = "*"     # missing 'black' dependency
 isort = "^5.10"
 
 # Linters
 mypy = "~0.990"
-types-setuptools = "^65.7.0.3"  # pkg_config mypy
+types-setuptools = "^65.7.0.3" # pkg_config mypy
 pylint = "^2.10"
 pydocstyle = "^6.1"
 
@@ -45,7 +45,7 @@ profile = "black"
 ignore_missing_imports = true
 no_implicit_optional = true
 check_untyped_defs = true
-namespace_packages = true
+namespace_packages = false
 
 cache_dir = ".cache/mypy/"
 
