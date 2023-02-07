@@ -15,9 +15,15 @@ class BottleException(Exception):
 
 
 class StackBottle(Generic[T]):
+
+    n_bottles = 0
+
     def __init__(self, size: int = 4):
         self._size = size
         self._container: List[T] = []
+
+        self.name = StackBottle.n_bottles
+        StackBottle.n_bottles += 1
 
     @property
     def size(self) -> int:
@@ -77,7 +83,7 @@ class StackBottle(Generic[T]):
             another_bottle.add(self._container.pop())
 
     def __repr__(self) -> str:
-        return f"StackBottle<{self.level}/{self._size}>:[{self._container}]"
+        return f"StackBottle(name={self.name})<{self.level}/{self._size}>:[{self._container}]"
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -95,16 +101,16 @@ class WorldConfig(BaseModel):
 
 class World(Generic[T]):
     def __init__(self, config: WorldConfig, color_set) -> None:
-        self._bottles: List[StackBottle[T]] = [
+        self.bottles: List[StackBottle[T]] = [
             StackBottle(config.bottle_size) for i in range(config.n_bottles)
         ]
-        for bottle in self._bottles[: -config.n_empty]:
+        for bottle in self.bottles[: -config.n_empty]:
             for _ in range(bottle.size):
                 bottle.add(color_set[random.randint(0, config.n_collors)])
 
     @property
     def is_done(self) -> bool:
-        for bottle in self._bottles:
+        for bottle in self.bottles:
             if bottle.is_empty or bottle.is_full_with_one_color:
                 pass
             else:
