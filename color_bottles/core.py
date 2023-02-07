@@ -1,0 +1,2 @@
+class StackBottle:
+    pass
