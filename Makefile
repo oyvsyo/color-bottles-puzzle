@@ -51,7 +51,7 @@ dist: install  ## Build dist to be ready to publish
 
 .PHONY: clean
 clean:  ## Remove caches and dist folders
-	rm -r .cache dist
+	rm -rf .cache dist */*__pycache__* */*/*__pycache__*
 
 # HELP #####################################################################
 .DEFAULT_GOAL := help
