@@ -11,7 +11,7 @@ color_set: List[str] = ["🟥", "🟧", "🟩", "🟦", "🟪", "🟫", "⬜️"
 
 
 class GameStateView:
-    def __init__(self, world):
+    def __init__(self, world: World):
         self.world: World = world
 
     def draw_world(self):
@@ -35,8 +35,42 @@ class GameStateView:
 
 
 def create_game() -> GameStateView:
-
+    StackBottle.n_bottles = 0
     return GameStateView(World.simple_world(color_set))
+
+
+def parse_valid_bottles(user_input: str, n_bottles: int) -> List[int]:
+    user_input = user_input.strip()
+
+    if n_bottles <= 10:
+        inputs = [s for s in user_input.replace(" ", "")]
+    else:
+        inputs = user_input.split()
+
+    if len(inputs) % 2 != 0:
+        if len(inputs) == 1:
+            if inputs[0] == "q":
+                sys.exit(0)
+
+            print("len % 2 != 0")
+            return []
+
+    try:
+        bottles_ids = [int(i) for i in inputs]
+
+    except ValueError:
+        print(f"Cant parse {inputs} into ints")
+        return []
+
+    for b1, b2 in zip(bottles_ids[:-1], bottles_ids[1:]):
+        if b2 == b1 or b1 < 0 or b2 < 0:
+            return []
+            print("We do not allow to pour into self or negative bottles")
+        elif b1 >= n_bottles or b2 >= n_bottles:
+            print(f"Bottles number cant be greater or equal of the number of bottles ({n_bottles})")
+            return []
+
+    return bottles_ids
 
 
 def main():
@@ -46,42 +80,14 @@ def main():
 
     running: bool = True
     while running:
-        turn: list[str] = input("your turn:  ").strip().split()
+        turn: str = input("your turn:  ")
 
-        is_invalid_input: bool = False
+        bottles_ids = parse_valid_bottles(turn, len(state.world.bottles))
 
-        b_from, b_to = 0, 0
+        if bottles_ids:
 
-        if len(turn) != 2:
-            if len(turn) == 1:
-                if turn[0] == "q":
-                    sys.exit(0)
-            is_invalid_input = True
-            print("len != 2")
-        else:
-            try:
-                b_from, b_to = int(turn[0]), int(turn[1])
-
-                if b_from == b_to or b_from < 0 or b_to < 0:
-                    is_invalid_input = True
-                    print("We do not allow to pour into self or negative bottles")
-                elif b_to >= len(state.world.bottles) or b_from >= len(state.world.bottles):
-                    print(
-                        f"Bottles number cant be greater or equal of the number of bottles ({len(state.world.bottles)})"
-                    )
-                    is_invalid_input = True
-
-            except ValueError:
-                print(f"Cant parse {turn} into 2 ints")
-                is_invalid_input = True
-
-        if is_invalid_input:
-            print(
-                "Invalit move, enter 2 numbers separated by space,"
-                " like '3 1' to pour from 3-rd bottle to 1-st "
-            )
-        else:
-            state.world.bottles[b_from].pour_to(state.world.bottles[b_to])
+            for b1, b2 in zip(bottles_ids[:-1], bottles_ids[1:]):
+                state.world.bottles[b1].pour_to(state.world.bottles[b2])
 
             state.draw_world()
 
