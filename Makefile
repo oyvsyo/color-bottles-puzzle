@@ -22,7 +22,7 @@ format: install  # Run formatters: black, isort
 .PHONY: check
 check: install format  ## Run formatters, linters, and static analysis
 	poetry run mypy $(PACKAGE) tests
-	poetry run pylint $(PACKAGE) tests --rcfile=.pylint.ini
+	poetry run pylint $(PACKAGE) tests
 	poetry run pydocstyle $(PACKAGE) tests
 
 .PHONY: tests

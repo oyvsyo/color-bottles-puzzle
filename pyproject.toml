@@ -10,7 +10,11 @@ packages = [{ include = "color_bottles" }]
 [tool.poetry.dependencies]
 python = "^3.7"
 pydantic = "^1.10.4"
-pygame = "^2.1.2"
+pygame = { version = "^2.1.2", optional = true }
+
+[tool.poetry.extras]
+pygame = ["pygame"]
+all = ["pygame"]
 
 [tool.poetry.dev-dependencies]
 

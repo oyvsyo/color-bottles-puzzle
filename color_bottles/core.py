@@ -82,6 +82,9 @@ class StackBottle(Generic[T]):
         elif self._container[-1] != another_bottle._container[-1]:
             logger.debug("Destination bottle have different element %s", another_bottle)
             return False
+        elif another_bottle is self:
+            logger.debug("Cannot pour to itself %s", another_bottle)
+            return False
         else:
             return True
 
@@ -108,6 +111,7 @@ class WorldConfig(BaseModel):
 
 class World(Generic[T]):
     def __init__(self, config: WorldConfig, color_set: List[T]) -> None:
+        self.config: WorldConfig = config
         self.bottles: List[StackBottle[T]] = [
             StackBottle(config.bottle_size) for i in range(config.n_bottles)
         ]

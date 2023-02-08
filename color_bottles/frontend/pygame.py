@@ -1,10 +1,10 @@
 import logging
 from typing import List, Optional
+
 import pygame
 from pygame.locals import MOUSEBUTTONDOWN, QUIT
 
 from color_bottles.core import StackBottle, World
-
 
 logger = logging.getLogger(__name__)
 
