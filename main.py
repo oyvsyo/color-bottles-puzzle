@@ -13,11 +13,13 @@ consoleHandler.setFormatter(logFormatter)
 logger.addHandler(consoleHandler)
 logger.setLevel(logging.DEBUG)
 
-
+#  --- pygame stuff
 pygame.init()
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((820, 480))
 clock = pygame.time.Clock()
+sysfont = pygame.font.SysFont("chalkdusterttf", 24)
 
+#  --- colors ----
 BLACK = (0, 0, 0)
 GRAY_SELECT = (178, 178, 127)
 GRAY = (127, 127, 127)
@@ -36,17 +38,18 @@ SELECTED_BORDER: int = 4
 
 
 class BottleView:
-    def __init__(self, bottle: StackBottle, x: int, y: int, size: int):
+    def __init__(self, bottle: StackBottle, x: int, y: int):
         self.bottle = bottle
-        self.size = size
-        self.xy: tuple[int, int, int, int] = (x, y, QUAD, y + QUAD * size)
+        self.size = bottle.size
+        self.xy: tuple[int, int, int, int] = (x, y, QUAD, QUAD * self.size)
         self.selected_border = (
             x - SELECTED_BORDER,
             y - SELECTED_BORDER,
             QUAD + SELECTED_BORDER * 2,
-            y + QUAD * size + SELECTED_BORDER * 2,
+            QUAD * self.size + SELECTED_BORDER * 2,
         )
-        self.rect = None
+        #  draw self.rect
+        self.rect = pygame.draw.rect(screen, BLACK, self.xy)
         self.draw_self()
         logger.debug("Draw bottle %d, %d, %d, %d", *self.xy)
 
@@ -64,8 +67,8 @@ class BottleView:
 
     def draw_colors(self):
         x, y, width, height = self.xy
-        for i, color in enumerate(self.bottle._container):
-            color_y = y + (self.bottle.size - i) * QUAD
+        for i, color in enumerate(self.bottle._container, start=1):
+            color_y = y + (self.size - i) * QUAD
             pygame.draw.rect(screen, color, (x, color_y, QUAD, QUAD))
 
     def draw_selected(self):
@@ -87,10 +90,6 @@ class BottleView:
         )
 
 
-class ColorView:
-    pass
-
-
 class GameStateView:
     def __init__(self, world: World):
         self.world: World = world
@@ -103,7 +102,7 @@ class GameStateView:
 
             logger.debug("x = %d", x)
 
-            b_view = BottleView(bottle, x, y, bottle.size)
+            b_view = BottleView(bottle, x, y)
             self.bottles_views.append(b_view)
             logger.debug("Draw bottle %s, %d, %d, bottle_name %d", bottle, x, y, bottle.name)
         pygame.display.update()
@@ -118,10 +117,6 @@ class GameStateView:
         logger.debug("Selected bottle: %s", b_view.bottle)
         self.selected_bottle = b_view
         self.selected_bottle.draw_selected()
-
-
-# bottle: BottleView = BottleView(100, 100, 4)
-# pygame.display.update()
 
 
 def main():
@@ -163,6 +158,13 @@ def main():
                             b_view.draw_self()
 
                             state.deselect()
+
+                            if world.is_done:
+                                img = sysfont.render(
+                                    "You Win, Click here to start new game", True, BLUE
+                                )
+                                screen.blit(img, (20, 20))
+
                         else:
                             logger.debug("[MAINLOOP] Selected bottle %s", b_view.bottle)
                             state.select(b_view)

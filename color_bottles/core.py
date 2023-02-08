@@ -107,13 +107,20 @@ class WorldConfig(BaseModel):
 
 
 class World(Generic[T]):
-    def __init__(self, config: WorldConfig, color_set) -> None:
+    def __init__(self, config: WorldConfig, color_set: List[T]) -> None:
         self.bottles: List[StackBottle[T]] = [
             StackBottle(config.bottle_size) for i in range(config.n_bottles)
         ]
-        for bottle in self.bottles[: -config.n_empty]:
-            for _ in range(bottle.size):
-                bottle.insert(color_set[random.randint(0, config.n_collors)])
+
+        colors = random.sample(color_set, k=config.n_collors)
+
+        n_full_bottles = config.n_bottles - config.n_empty
+        shuffled = colors * (n_full_bottles - 1)
+        random.shuffle(shuffled)
+
+        for i, bottle in enumerate(self.bottles[:n_full_bottles]):
+            for j in range(bottle.size):
+                bottle.insert(shuffled[i * bottle.size + j])
 
     @property
     def is_done(self) -> bool:
@@ -141,5 +148,5 @@ class World(Generic[T]):
     @classmethod
     def simple_world(cls, color_set):
 
-        conf: WorldConfig = WorldConfig(n_bottles=5, n_empty=1, bottle_size=4, n_collors=4)
+        conf: WorldConfig = WorldConfig(n_bottles=7, n_empty=2, bottle_size=4, n_collors=5)
         return cls(conf, color_set)
