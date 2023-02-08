@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 #  --- pygame stuff
 pygame.init()
-screen = pygame.display.set_mode((820, 480))
+screen = pygame.display.set_mode((980, 480))
 clock = pygame.time.Clock()
 sysfont = pygame.font.SysFont("chalkdusterttf", 24)
 

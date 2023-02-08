@@ -119,7 +119,8 @@ class World(Generic[T]):
         colors = random.sample(color_set, k=config.n_collors)
 
         n_full_bottles = config.n_bottles - config.n_empty
-        shuffled = colors * (n_full_bottles - 1)
+        shuffled = colors * config.bottle_size
+
         random.shuffle(shuffled)
 
         for i, bottle in enumerate(self.bottles[:n_full_bottles]):
@@ -152,5 +153,5 @@ class World(Generic[T]):
     @classmethod
     def simple_world(cls, color_set):
 
-        conf: WorldConfig = WorldConfig(n_bottles=7, n_empty=2, bottle_size=4, n_collors=5)
+        conf: WorldConfig = WorldConfig(n_bottles=9, n_empty=2, bottle_size=4, n_collors=7)
         return cls(conf, color_set)
