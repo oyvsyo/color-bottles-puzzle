@@ -7,7 +7,7 @@ from color_bottles.core import StackBottle, World
 logger = logging.getLogger(__name__)
 
 OFFSET: str = "  "
-color_set: List[str] = ["🟥", "🟧", "🟩", "🟦", "🟪", "🟫"]
+color_set: List[str] = ["🟥", "🟧", "🟩", "🟦", "🟪", "🟫", "⬜️", "⬛️"]
 
 
 class GameStateView:
@@ -34,11 +34,14 @@ class GameStateView:
         print()
 
 
+def create_game() -> GameStateView:
+
+    return GameStateView(World.simple_world(color_set))
+
+
 def main():
 
-    world = World.simple_world(color_set)
-    state = GameStateView(world=world)
-
+    state: GameStateView = create_game()
     state.draw_world()
 
     running: bool = True
@@ -62,9 +65,9 @@ def main():
                 if b_from == b_to or b_from < 0 or b_to < 0:
                     is_invalid_input = True
                     print("We do not allow to pour into self or negative bottles")
-                elif b_to >= len(world.bottles) or b_from >= len(world.bottles):
+                elif b_to >= len(state.world.bottles) or b_from >= len(state.world.bottles):
                     print(
-                        f"Bottles number cant be greater or equal of the number of bottles ({len(world.bottles)})"
+                        f"Bottles number cant be greater or equal of the number of bottles ({len(state.world.bottles)})"
                     )
                     is_invalid_input = True
 
@@ -78,9 +81,15 @@ def main():
                 " like '3 1' to pour from 3-rd bottle to 1-st "
             )
         else:
-            world.bottles[b_from].pour_to(world.bottles[b_to])
+            state.world.bottles[b_from].pour_to(state.world.bottles[b_to])
 
             state.draw_world()
 
-            if world.is_done:
+            if state.world.is_done:
                 print("You Win Congrats !!!")
+                play_new_game = input("For new game - type 'n'").strip()
+                if play_new_game == "n":
+                    state: GameStateView = create_game()
+                    state.draw_world()
+                else:
+                    running = False

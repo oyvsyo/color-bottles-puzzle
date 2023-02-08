@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import pygame
 from pygame.locals import MOUSEBUTTONDOWN, QUIT
@@ -19,13 +19,13 @@ sysfont = pygame.font.SysFont("chalkdusterttf", 24)
 BLACK = (0, 0, 0)
 GRAY_SELECT = (178, 178, 127)
 GRAY = (127, 127, 127)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-CYAN = (0, 255, 255)
-MAGENTA = (255, 0, 255)
+WHITE = (230, 230, 230)
+RED = (200, 0, 0)
+GREEN = (0, 200, 0)
+BLUE = (0, 0, 200)
+YELLOW = (200, 200, 0)
+CYAN = (0, 200, 200)
+MAGENTA = (200, 0, 200)
 
 color_set = [GRAY, WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA]
 
@@ -115,13 +115,22 @@ class GameStateView:
         self.selected_bottle.draw_selected()
 
 
-def main():
+def create_game() -> Tuple[GameStateView, pygame.rect.Rect]:
 
-    world = World.simple_world(color_set)
-    state = GameStateView(world=world)
+    state: GameStateView = GameStateView(world=World.simple_world(color_set))
 
     state.draw_bottles()
+
+    img = sysfont.render("Click here to start new game", True, BLUE)
+    new_game_rect = screen.blit(img, (20, 20))
     pygame.display.update()
+
+    return state, new_game_rect
+
+
+def main():
+
+    state, new_game_rect = create_game()
 
     running: bool = True
     while running:
@@ -155,11 +164,11 @@ def main():
 
                             state.deselect()
 
-                            if world.is_done:
+                            if state.world.is_done:
                                 img = sysfont.render(
-                                    "You Win, Click here to start new game", True, BLUE
+                                    "You Win, Click here to start new game", True, RED
                                 )
-                                screen.blit(img, (20, 20))
+                                new_game_rect = screen.blit(img, (20, 20))
 
                         else:
                             logger.debug("[MAINLOOP] Selected bottle %s", b_view.bottle)
@@ -169,5 +178,8 @@ def main():
                 if not collided:
                     state.deselect()
                     pygame.display.update()
+
+                if new_game_rect.collidepoint(pos):
+                    state, new_game_rect = create_game()
 
         clock.tick(60)
