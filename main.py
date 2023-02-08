@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    frontend_module_path: str = f"color_bottles.frontend.{args.frontend}"
+    frontend_module_path: str = f"color_bottles.frontend.{args.frontend}_front"
 
     logger.debug("loading frontend: %s", frontend_module_path)
     frontend = importlib.import_module(frontend_module_path)
