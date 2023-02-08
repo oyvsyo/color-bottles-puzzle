@@ -11,10 +11,10 @@ color_set: List[str] = ["🟥", "🟧", "🟩", "🟦", "🟪", "🟫", "⬜️"
 
 
 class GameStateView:
-    def __init__(self, world: World):
+    def __init__(self, world: World) -> None:
         self.world: World = world
 
-    def draw_world(self):
+    def draw_world(self) -> None:
         print()
         for line_number in range(1, self.world.config.bottle_size + 1):
             line = OFFSET
