@@ -3,15 +3,11 @@ import logging
 import random
 from typing import Generic, List, TypeVar
 
-from pydantic import BaseModel
+from dataclasses import dataclass
 
 T = TypeVar("T")
 
 logger = logging.getLogger(__name__)
-
-
-class BottleException(Exception):
-    pass
 
 
 class StackBottle(Generic[T]):
@@ -20,7 +16,7 @@ class StackBottle(Generic[T]):
 
     def __init__(self, size: int = 4):
         self._size = size
-        self._container: List[T] = []
+        self.container: List[T] = []
 
         self.name = StackBottle.n_bottles
         StackBottle.n_bottles += 1
@@ -39,36 +35,21 @@ class StackBottle(Generic[T]):
 
     @property
     def level(self) -> int:
-        return len(self._container)
+        return len(self.container)
 
     @property
     def is_full_with_one_color(self) -> bool:
         if not self.is_full or self.is_empty:
             return False
         else:
-            return self._container[:-1] == self._container[1:]
-
-    def add(self, element: T):
-        if self.is_full:
-            logger.debug("Bottle is full %s", self)
-
-        elif self.is_empty:
-            logger.debug("Added %s to bottle: %s", element, self)
-            self._container.append(element)
-
-        elif self._container[-1] != element:
-            logger.debug("Elements are not equal %s != %s", self._container[-1], element)
-
-        elif self._container[-1] == element:
-            logger.debug("Added %s to bottle: %s", element, self)
-            self._container.append(element)
+            return self.container[:-1] == self.container[1:]
 
     def insert(self, element: T):
         if self.is_full:
             logger.debug("Bottle is full %s", self)
         else:
             logger.debug("Added %s to bottle: %s", element, self)
-            self._container.append(element)
+            self.container.append(element)
 
     def can_pour(self, another_bottle: "StackBottle") -> bool:
         if self.is_empty:
@@ -79,7 +60,7 @@ class StackBottle(Generic[T]):
             return False
         elif another_bottle.is_empty:
             return True
-        elif self._container[-1] != another_bottle._container[-1]:
+        elif self.container[-1] != another_bottle.container[-1]:
             logger.debug("Destination bottle have different element %s", another_bottle)
             return False
         elif another_bottle is self:
@@ -90,10 +71,10 @@ class StackBottle(Generic[T]):
 
     def pour_to(self, another_bottle: "StackBottle"):
         while self.can_pour(another_bottle):
-            another_bottle.add(self._container.pop())
+            another_bottle.container.append(self.container.pop())
 
     def __repr__(self) -> str:
-        return f"StackBottle(name={self.name})<{self.level}/{self._size}>:[{self._container}]"
+        return f"StackBottle(name={self.name})<{self.level}/{self._size}>:[{self.container}]"
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -102,7 +83,8 @@ class StackBottle(Generic[T]):
         return self.level
 
 
-class WorldConfig(BaseModel):
+@dataclass(repr=True, init=True)
+class WorldConfig:
     n_bottles: int
     n_empty: int
     bottle_size: int

@@ -1,15 +1,18 @@
 [tool.poetry]
-name = "color-bottles"
-version = "0.1.0"
+name = "color-bottles-puzzle"
+version = "0.0.1"
 description = "Puzzle game"
-authors = ["Your Name <you@example.com>"]
-license = ""
+authors = ["Stepan Dvoiak <dvoiak.stepan@gmail.com>"]
+license = "MIT"
+
 readme = "README.md"
 packages = [{ include = "color_bottles" }]
 
+keywords = ["game", "puzzle"]
+
+
 [tool.poetry.dependencies]
 python = "^3.7"
-pydantic = "^1.10.4"
 pygame = { version = "^2.1.2", optional = true }
 
 [tool.poetry.extras]
@@ -77,7 +80,13 @@ directory = ".cache/coverage/htmlcov"
 [tool.coverage.xml]
 output = ".cache/coverage/coverage.xml"
 
-[build-system]
+[tool.poetry.scripts]
+color-bottles = "color_bottles.play_game:run"
+color-bottles-console = "color_bottles.frontend.console_front:run_game"
+color-bottles-pygame = { callable = "color_bottles.frontend.pygame_front:run_game", extras = [
+    "pygame",
+] }
 
+[build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

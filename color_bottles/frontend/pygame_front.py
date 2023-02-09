@@ -63,7 +63,7 @@ class BottleView:
 
     def draw_colors(self):
         x, y, width, height = self.xy
-        for i, color in enumerate(self.bottle._container, start=1):
+        for i, color in enumerate(self.bottle.container, start=1):
             color_y = y + (self.size - i) * QUAD
             pygame.draw.rect(screen, color, (x, color_y, QUAD, QUAD))
 
@@ -128,7 +128,7 @@ def create_game() -> Tuple[GameStateView, pygame.rect.Rect]:
     return state, new_game_rect
 
 
-def main():
+def run_game():
 
     state, new_game_rect = create_game()
 
