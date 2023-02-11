@@ -814,10 +814,9 @@ docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker
 testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
 
 [extras]
-all = ["pygame"]
 pygame = ["pygame"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "d72ef3955163d64b8c1c69ab9c809a176879a58ebdbe17e946f67b966557c476"
+content-hash = "a3398ecd62f4cd57fcd53ad3b8ac2b53b4c5b63d558594a66c36578d97e8e5a5"

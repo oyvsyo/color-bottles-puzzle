@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "color-bottles-puzzle"
-version = "0.0.1"
+version = "0.0.2a0"
 description = "Puzzle game"
 authors = ["Stepan Dvoiak <dvoiak.stepan@gmail.com>"]
 license = "MIT"
@@ -13,11 +13,10 @@ keywords = ["game", "puzzle"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pygame = { version = "^2.1.2", optional = true }
+pygame = { version = "^2", optional = true }
 
 [tool.poetry.extras]
 pygame = ["pygame"]
-all = ["pygame"]
 
 [tool.poetry.dev-dependencies]
 

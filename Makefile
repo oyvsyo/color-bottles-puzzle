@@ -43,9 +43,16 @@ tests-coverage: install  ## Run tests with coverage
 
 # BUILD #######################################################################
 
-.PHONY: dist
-dist: install  ## Build dist to be ready to publish
+.PHONY: build
+build: install  ## Build dist to be ready to publish
 	poetry build
+
+# RELEASE #####################################################################
+
+.PHONY: pypi
+pypi: build ## Upload the current version to PyPI
+	poetry publish --repository test_pypi
+
 
 # CLEAN #####################################################################
 

@@ -1,6 +1,6 @@
 ## Color bottles puzzle
 
- 🟣 Watter color sort puzzle game 🧪
+ 🌡️ Watter color sort puzzle game 🧪
 
 ### Install and play:
 ```
@@ -10,18 +10,18 @@ color-bottles
 ```
 
 ### 📈 Objective
-make bottles full with one color or empty -> 📊
+Make bottles full with one color or empty -> 📊
 
 ### 📌 Rules
-you can pour color water from one bottle to another only if destination bottle is not full, is empty or have same color on top.
+You can pour color water from one bottle to another only if destination bottle is not full, is empty or have same color on top.
  
 ## 🕹️ Controls 
-To pour from bottle 3 to bottle 5 just type '3 5' and enter
-If number of bottles less then 10, you can ommit the space 💥
+To pour from bottle 3 to bottle 5 just type '3 5' and enter  
+If number of bottles less then 10, you can ommit the space 💥   
 Also you can pour multiple times by 1 hit 🔥 - just type in a row 
-like '5671' or '5 6 7 1' - will pour 5 to 6 and then 7 to 1
-🔴 To exit - type 'q'
-🔮 Good luck !!
+like '5671' or '5 6 7 1' - will pour 5 to 6 and then 7 to 1   
+🔴 To exit - type 'q'   
+🔮 Good luck !!  
 
 Examples of a game (monospaced font in console work just fine):
 

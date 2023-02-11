@@ -1,16 +1,36 @@
 import logging
 import sys
-from typing import List, Optional
+from typing import List
 
-from color_bottles.core import StackBottle, World
+from color_bottles.core import StackBottle, World, WorldConfig
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 OFFSET: str = "  "
-color_set: List[str] = ["🟥", "🟧", "🟩", "🟦", "🟪", "🟫", "⬜️", "⬛️"]
+color_set: List[str] = [
+    "🟥",
+    "🟧",
+    "🟩",
+    "🟦",
+    "🟪",
+    "🟫",
+    "⬜️",
+    "⬛️",
+    "🔸",
+    "🔹",
+    "🔴",
+    "🟠",
+    "🟡",
+    "🟢",
+    "🔵",
+    "🟣",
+    "⚫️",
+    "⚪️",
+    "🟤",
+]
 
 HELP: str = """
- 🟣 Color bottles puzzle game 🧪:
+ 🌡️  Watter color sort puzzle game 🧪:
 Your task - sort all colors in bottles 
  🕹️ Controls : to pour from bottle 3 to bottle 5 just type '3 5' and enter
 If number of bottles less then 10, you can ommit the space 💥
@@ -22,15 +42,15 @@ like '5671' or '5 6 7 1' - will pour 5 to 6 and then 7 to 1
 
 
 class GameStateView:
-    def __init__(self, world: World) -> None:
-        self.world: World = world
+    def __init__(self, config) -> None:
+        self.world: World = World(config, color_set)
 
     def draw_world(self) -> None:
         print()
         for line_number in range(1, self.world.config.bottle_size + 1):
-            line = OFFSET
+            line: str = OFFSET
             for bottle in self.world.bottles:
-                idx = bottle.size - (bottle.level + line_number)
+                idx: int = bottle.size - (bottle.level + line_number)
                 if idx >= 0:
                     line += OFFSET + "|  |" + OFFSET
                 else:
@@ -45,18 +65,13 @@ class GameStateView:
         print()
 
 
-def create_game() -> GameStateView:
-    StackBottle.n_bottles = 0
-    return GameStateView(World.simple_world(color_set))
-
-
 def parse_valid_bottles(user_input: str, n_bottles: int) -> List[int]:
-    user_input = user_input.strip()
+    user_inputs: str = user_input.strip()
 
     if n_bottles <= 10:
-        inputs = [s for s in user_input.replace(" ", "")]
+        inputs: list[str] = [s for s in user_inputs.replace(" ", "")]
     else:
-        inputs = user_input.split()
+        inputs = user_inputs.split()
 
     if len(inputs) % 2 != 0:
         if len(inputs) == 1:
@@ -67,7 +82,7 @@ def parse_valid_bottles(user_input: str, n_bottles: int) -> List[int]:
             return []
 
     try:
-        bottles_ids = [int(i) for i in inputs]
+        bottles_ids: list[int] = [int(i) for i in inputs]
 
     except ValueError:
         print(f" ❤️‍🩹 Cant parse {inputs} into ints")
@@ -86,18 +101,18 @@ def parse_valid_bottles(user_input: str, n_bottles: int) -> List[int]:
     return bottles_ids
 
 
-def run_game():
+def run_game(config: WorldConfig) -> None:
 
     print(HELP)
 
-    state: GameStateView = create_game()
+    state: GameStateView = GameStateView(config)
     state.draw_world()
 
     running: bool = True
     while running:
         turn: str = input(" 🎮 your turn:  ")
 
-        bottles_ids = parse_valid_bottles(turn, len(state.world.bottles))
+        bottles_ids: List[int] = parse_valid_bottles(turn, len(state.world.bottles))
 
         if bottles_ids:
 
@@ -106,11 +121,11 @@ def run_game():
 
             state.draw_world()
 
-            if state.world.is_done:
+            if state.world.is_solved:
                 print(" 🏆 You Win Congrats 🎉 !!!")
-                play_new_game = input(" 🎁 For new game - type 'n'").strip()
+                play_new_game: str = input(" 🎁 For new game - type 'n'").strip()
                 if play_new_game == "n":
-                    state: GameStateView = create_game()
+                    state: GameStateView = GameStateView(config)  # type: ignore[no-redef]
                     state.draw_world()
                 else:
                     running = False

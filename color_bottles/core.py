@@ -1,9 +1,10 @@
-# Frontend agnostic main logic of
+# Frontend agnostic main logic of game
 import logging
 import random
-from typing import Generic, List, TypeVar
-
+from argparse import ArgumentParser
 from dataclasses import dataclass
+from inspect import signature
+from typing import Generic, List, TypeVar
 
 T = TypeVar("T")
 
@@ -11,14 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 class StackBottle(Generic[T]):
+    n_bottles: int = 0
 
-    n_bottles = 0
-
-    def __init__(self, size: int = 4):
-        self._size = size
+    def __init__(self, size: int = 4) -> None:
+        self._size: int = size
         self.container: List[T] = []
 
-        self.name = StackBottle.n_bottles
+        self.name: int = StackBottle.n_bottles
         StackBottle.n_bottles += 1
 
     @property
@@ -44,7 +44,7 @@ class StackBottle(Generic[T]):
         else:
             return self.container[:-1] == self.container[1:]
 
-    def insert(self, element: T):
+    def insert(self, element: T) -> None:
         if self.is_full:
             logger.debug("Bottle is full %s", self)
         else:
@@ -61,7 +61,9 @@ class StackBottle(Generic[T]):
         elif another_bottle.is_empty:
             return True
         elif self.container[-1] != another_bottle.container[-1]:
-            logger.debug("Destination bottle have different element %s", another_bottle)
+            logger.debug(
+                "Destination bottle %s have different element than source %s", another_bottle, self
+            )
             return False
         elif another_bottle is self:
             logger.debug("Cannot pour to itself %s", another_bottle)
@@ -69,12 +71,12 @@ class StackBottle(Generic[T]):
         else:
             return True
 
-    def pour_to(self, another_bottle: "StackBottle"):
+    def pour_to(self, another_bottle: "StackBottle") -> None:
         while self.can_pour(another_bottle):
             another_bottle.container.append(self.container.pop())
 
     def __repr__(self) -> str:
-        return f"StackBottle(name={self.name})<{self.level}/{self._size}>:[{self.container}]"
+        return f"StackBottle(name={self.name})<{self.level}/{self._size}>:{self.container}"
 
     def __str__(self) -> str:
         return self.__repr__()
@@ -88,7 +90,34 @@ class WorldConfig:
     n_bottles: int
     n_empty: int
     bottle_size: int
-    n_collors: int
+    n_colors: int
+
+    @classmethod
+    def from_parser(cls, main_parser: ArgumentParser) -> "WorldConfig":
+
+        parser = ArgumentParser(parents=[main_parser])
+
+        parser.add_argument("-nb", "--n_bottles", type=int, default=9, help="number of bottles")
+        parser.add_argument("-nc", "--n_colors", type=int, default=None, help="number of colors")
+        parser.add_argument("-ne", "--n_empty", type=int, default=2, help="number of empty bottles")
+        parser.add_argument(
+            "-bs",
+            "--bottle_size",
+            type=int,
+            default=4,
+            help="size of the bootle, ie how many colors the bottle contain",
+        )
+
+        args, _ = parser.parse_known_args()
+        args.n_colors = args.n_colors or args.n_bottles - args.n_empty
+        kwargs = {
+            param: value
+            for param, value in vars(args).items()
+            if param in signature(cls).parameters.keys()
+        }
+        logger.debug("World config:")
+        logger.debug(kwargs)
+        return cls(**kwargs)
 
 
 class World(Generic[T]):
@@ -98,10 +127,10 @@ class World(Generic[T]):
             StackBottle(config.bottle_size) for i in range(config.n_bottles)
         ]
 
-        colors = random.sample(color_set, k=config.n_collors)
+        colors: list[T] = random.sample(color_set, k=config.n_colors)
 
-        n_full_bottles = config.n_bottles - config.n_empty
-        shuffled = colors * config.bottle_size
+        n_full_bottles: int = config.n_bottles - config.n_empty
+        shuffled: list[T] = colors * config.bottle_size
 
         random.shuffle(shuffled)
 
@@ -110,7 +139,7 @@ class World(Generic[T]):
                 bottle.insert(shuffled[i * bottle.size + j])
 
     @property
-    def is_done(self) -> bool:
+    def is_solved(self) -> bool:
         for bottle in self.bottles:
             if bottle.is_empty or bottle.is_full_with_one_color:
                 pass
@@ -119,7 +148,7 @@ class World(Generic[T]):
         return True
 
     @classmethod
-    def random_world(cls, color_set) -> "World":
+    def random_world(cls, color_set) -> "World[T]":
         n_bottles: int = random.randint(3, 7)
         n_empty: int = n_bottles % 2 + 1
         bottle_size: int = n_bottles - 2
@@ -128,12 +157,12 @@ class World(Generic[T]):
             n_bottles=n_bottles,
             n_empty=n_empty,
             bottle_size=bottle_size,
-            n_collors=n_bottles - n_empty,
+            n_colors=n_bottles - n_empty,
         )
         return cls(conf, color_set)
 
     @classmethod
-    def simple_world(cls, color_set):
+    def simple_world(cls, color_set) -> "World[T]":
 
-        conf: WorldConfig = WorldConfig(n_bottles=9, n_empty=2, bottle_size=4, n_collors=7)
+        conf: WorldConfig = WorldConfig(n_bottles=9, n_empty=2, bottle_size=4, n_colors=7)
         return cls(conf, color_set)

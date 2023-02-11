@@ -39,5 +39,8 @@ pip-wheel-metadata/
 # pycharm settings
 .idea/
 
+# vscode
+.vscode
+
 # mac
 .DS_Store
