@@ -95,7 +95,6 @@ class WorldConfig:
 
     @classmethod
     def from_parser(cls, main_parser: ArgumentParser) -> "WorldConfig":
-
         parser = ArgumentParser(parents=[main_parser])
 
         parser.add_argument("-nb", "--n_bottles", type=int, default=9, help="number of bottles")
@@ -171,6 +170,5 @@ class World(Generic[T]):
 
     @classmethod
     def simple_world(cls, color_set) -> "World[T]":
-
         conf: WorldConfig = WorldConfig(n_bottles=9, n_empty=2, bottle_size=4, n_colors=7)
         return cls(conf, color_set)

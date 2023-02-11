@@ -123,7 +123,6 @@ class GameStateView:
 
 
 def run_game(config: WorldConfig) -> None:
-
     state = GameStateView(config)
 
     running: bool = True
@@ -145,7 +144,6 @@ def run_game(config: WorldConfig) -> None:
                         collided = True
                         logger.debug("[MAINLOOP] Colide with bottle %s", b_view.bottle)
                         if state.selected_bottle and b_view is not state.selected_bottle:
-
                             logger.debug(
                                 "[MAINLOOP] Pour bottle %s to %s",
                                 state.selected_bottle.bottle,

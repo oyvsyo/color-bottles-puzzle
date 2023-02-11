@@ -1,7 +1,9 @@
 [tool.poetry]
+
 name = "color-bottles-puzzle"
-version = "0.0.2a0"
-description = "Puzzle game"
+version = "0.0.2"
+
+description = "Water color sort puzzle game"
 authors = ["Stepan Dvoiak <dvoiak.stepan@gmail.com>"]
 license = "MIT"
 
@@ -9,6 +11,9 @@ readme = "README.md"
 packages = [{ include = "color_bottles" }]
 
 keywords = ["game", "puzzle"]
+
+homepage = "https://github.com/oyvsyo/color-bottles-puzzle"
+repository = "https://github.com/oyvsyo/color-bottles-puzzle"
 
 
 [tool.poetry.dependencies]
@@ -21,13 +26,11 @@ pygame = ["pygame"]
 [tool.poetry.dev-dependencies]
 
 # Formatters
-black = "^22.1"
-tomli = "*"     # missing 'black' dependency
+black = "^23"
 isort = "^5.10"
 
 # Linters
 mypy = "~0.990"
-types-setuptools = "^65.7.0.3" # pkg_config mypy
 pylint = "^2.10"
 pydocstyle = "^6.1"
 
@@ -45,11 +48,9 @@ target-version = ["py37", "py38", "py39", "py310", "py311"]
 line-length = 100
 
 [tool.isort]
-
 profile = "black"
 
 [tool.mypy]
-
 ignore_missing_imports = true
 no_implicit_optional = true
 check_untyped_defs = true

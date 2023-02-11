@@ -2,7 +2,7 @@ import logging
 import sys
 from typing import List
 
-from color_bottles.core import StackBottle, World, WorldConfig
+from color_bottles.core import World, WorldConfig
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -102,7 +102,6 @@ def parse_valid_bottles(user_input: str, n_bottles: int) -> List[int]:
 
 
 def run_game(config: WorldConfig) -> None:
-
     state: GameStateView = GameStateView(config)
     print(HELP)
     state.draw_world()
@@ -114,7 +113,6 @@ def run_game(config: WorldConfig) -> None:
         bottles_ids: List[int] = parse_valid_bottles(turn, len(state.world.bottles))
 
         if bottles_ids:
-
             for b1, b2 in zip(bottles_ids[:-1], bottles_ids[1:]):
                 state.world.bottles[b1].pour_to(state.world.bottles[b2])
 
