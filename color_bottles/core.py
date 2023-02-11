@@ -1,6 +1,7 @@
 # Frontend agnostic main logic of game
 import logging
 import random
+import sys
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from inspect import signature
@@ -127,7 +128,14 @@ class World(Generic[T]):
             StackBottle(config.bottle_size) for i in range(config.n_bottles)
         ]
 
-        colors: list[T] = random.sample(color_set, k=config.n_colors)
+        if len(color_set) < config.n_colors:
+            logger.error(
+                "We do not have %d colors, please select n_colors <= %d",
+                config.n_colors,
+                len(color_set),
+            )
+            sys.exit(1)
+        colors: list[T] = color_set[: config.n_colors]
 
         n_full_bottles: int = config.n_bottles - config.n_empty
         shuffled: list[T] = colors * config.bottle_size

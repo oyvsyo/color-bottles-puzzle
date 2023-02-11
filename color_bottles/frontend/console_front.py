@@ -103,9 +103,8 @@ def parse_valid_bottles(user_input: str, n_bottles: int) -> List[int]:
 
 def run_game(config: WorldConfig) -> None:
 
-    print(HELP)
-
     state: GameStateView = GameStateView(config)
+    print(HELP)
     state.draw_world()
 
     running: bool = True
