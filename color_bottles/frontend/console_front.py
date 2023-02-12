@@ -106,6 +106,7 @@ def run_game(config: WorldConfig) -> None:
     print(HELP)
     state.draw_world()
 
+    game_ended = False
     running: bool = True
     while running:
         turn: str = input(" 🎮 your turn:  ")
@@ -119,10 +120,17 @@ def run_game(config: WorldConfig) -> None:
             state.draw_world()
 
             if state.world.is_solved:
+                game_ended = True
                 print(" 🏆 You Win Congrats 🎉 !!!")
+            elif state.world.is_no_move_left:
+                game_ended = True
+                print(" 📣 There is no move left ⛔️ !!!")
+
+            if game_ended:
                 play_new_game: str = input(" 🎁 For new game - type 'n'").strip()
                 if play_new_game == "n":
                     state: GameStateView = GameStateView(config)  # type: ignore[no-redef]
                     state.draw_world()
+                    game_ended = False
                 else:
                     running = False

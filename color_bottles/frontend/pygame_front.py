@@ -125,6 +125,7 @@ class GameStateView:
 def run_game(config: WorldConfig) -> None:
     state = GameStateView(config)
 
+    game_ended = False
     running: bool = True
     while running:
         for event in pygame.event.get():
@@ -156,8 +157,15 @@ def run_game(config: WorldConfig) -> None:
 
                             state.deselect()
 
+                            text = ""
                             if state.world.is_solved:
+                                game_ended = True
                                 text = "You Win, Click here to start new game"
+                            elif state.world.is_no_move_left:
+                                game_ended = True
+                                text = "No move left, Click here to start new game"
+
+                            if game_ended:
                                 state.new_game_rect = state.draw_new_game_text(text)
                                 pygame.display.update()
 

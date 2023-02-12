@@ -154,6 +154,15 @@ class World(Generic[T]):
                 return False
         return True
 
+    @property
+    def is_no_move_left(self) -> bool:
+        for bottle1 in self.bottles:
+            for bottle2 in self.bottles:
+                if bottle1 is not bottle2:
+                    if bottle1.can_pour(bottle2) or bottle2.can_pour(bottle1):
+                        return False
+        return True
+
     @classmethod
     def random_world(cls, color_set) -> "World[T]":
         n_bottles: int = random.randint(3, 7)
