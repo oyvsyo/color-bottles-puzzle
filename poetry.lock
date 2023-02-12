@@ -109,7 +109,7 @@ importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 files = [
@@ -806,4 +806,4 @@ pygame = ["pygame"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "d4363790de0ad13e8d79255cba1b50d83e59dce8d2403b145f01bd45844a59b9"
+content-hash = "143d9c860853855ba3ec6094abc45127ce4b809e09b58c093b4038964a3d82b2"

@@ -7,7 +7,7 @@ from color_bottles.core import World, WorldConfig
 logger: logging.Logger = logging.getLogger(__name__)
 
 OFFSET: str = "  "
-color_set: List[str] = [
+color_set_emoji: List[str] = [
     "🟥",
     "🟧",
     "🟩",
@@ -29,15 +29,39 @@ color_set: List[str] = [
     "🟤",
 ]
 
+color_set = color_set_emoji
+
+if sys.platform == "win32":
+    from colorama import Back, Style, just_fix_windows_console
+
+    just_fix_windows_console()
+    color_set_colorama = [
+        c + "  " + Style.RESET_ALL
+        for c in [
+            Back.GREEN,
+            Back.BLUE,
+            Back.CYAN,
+            Back.RED,
+            Back.MAGENTA,
+            Back.YELLOW,
+            Back.LIGHTBLUE_EX,
+            Back.LIGHTWHITE_EX,
+            Back.LIGHTGREEN_EX,
+            Back.LIGHTYELLOW_EX,
+        ]
+    ]
+    color_set = color_set_colorama
+
+
 HELP: str = """
  🌡️  Watter color sort puzzle game 🧪:
 Your task - sort all colors in bottles 
- 🕹️ Controls : to pour from bottle 3 to bottle 5 just type '3 5' and enter
-If number of bottles less then 10, you can ommit the space 💥
+ 🕹️ Controls : to pour from bottle `3` to bottle `7` just type `3 7` and enter.  
+If number of bottles less then 10, you can ommit the space 💥   
 Also you can pour multiple times by 1 hit 🔥 - just type in a row 
-like '5671' or '5 6 7 1' - will pour 5 to 6 and then 7 to 1
- 🔴 To exit - type 'q'
- 🔮 Good luck !!
+like `5718` or `5 7 1 8` - will pour `5` to `7` and then `1` to `8`   
+🔴 To exit - type `q`   
+🔮 Good luck !!  
 """
 
 

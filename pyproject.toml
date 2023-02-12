@@ -18,6 +18,7 @@ repository = "https://github.com/oyvsyo/color-bottles-puzzle"
 
 [tool.poetry.dependencies]
 python = "^3.7"
+colorama = "^0.4.6"
 pygame = { version = "^2", optional = true }
 
 [tool.poetry.extras]

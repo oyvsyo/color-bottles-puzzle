@@ -16,10 +16,10 @@ Make bottles full with one color or empty -> 📊
 You can pour color water from one bottle to another only if destination bottle is not full, is empty or have same color on top.
  
 ## 🕹️ Controls (Console frontend)
-To pour from bottle `3` to bottle `5` just type `3 5` and enter.  
+To pour from bottle `3` to bottle `7` just type `3 7` and enter.  
 If number of bottles less then 10, you can ommit the space 💥   
 Also you can pour multiple times by 1 hit 🔥 - just type in a row 
-like `5671` or `5 6 7 1` - will pour `5` to `6` and then `7` to `1`   
+like `5718` or `5 7 1 8` - will pour `5` to `7` and then `1` to `8`   
 🔴 To exit - type `q`   
 🔮 Good luck !!  
 
@@ -64,7 +64,9 @@ Thats why we have 2 frontends for now
 
 To run game with pygame GUI, install package with pygame extras:
 ```
-pip install color-bottles-puzzle[pygame]
+python3 -m venv env
+source env/bin/activate
+pip install "color-bottles-puzzle[pygame]"
 
 color-bottles
 ```
