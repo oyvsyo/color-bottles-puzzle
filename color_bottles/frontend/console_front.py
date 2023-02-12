@@ -31,7 +31,7 @@ color_set_emoji: List[str] = [
 
 color_set = color_set_emoji
 
-if sys.platform == "win32":
+if sys.platform == "win32" or sys.platform == "cygwin":
     from colorama import Back, Style, just_fix_windows_console
 
     just_fix_windows_console()
