@@ -99,6 +99,22 @@ class GameStateView:
         img = sysfont.render(text, True, BLUE)
         return screen.blit(img, (20, 20))
 
+    def draw_cant_pour_text(self, text: str) -> pygame.rect.Rect:
+        # last bottle y + height
+        text_y = self.bottles_views[-1].xy[1] + self.bottles_views[-1].xy[3] + QUAD
+
+        background = pygame.draw.rect(
+            screen,
+            BLACK,
+            (QUAD, text_y, 900, QUAD),
+        )
+
+        if text:
+            img = sysfont.render(text, True, RED)
+            return screen.blit(img, (QUAD, text_y))
+        else:
+            return background
+
     def draw_bottles(self) -> None:
         for i, bottle in enumerate(self.world.bottles):
             x, y = 2 * QUAD * (i + 1), QUAD
@@ -150,8 +166,9 @@ def run_game(config: WorldConfig) -> None:
                                 state.selected_bottle.bottle,
                                 b_view.bottle,
                             )
-                            state.selected_bottle.bottle.pour_to(b_view.bottle)
+                            cant_pour_text = state.selected_bottle.bottle.pour_to(b_view.bottle)
 
+                            state.draw_cant_pour_text(cant_pour_text)
                             state.selected_bottle.draw_self()
                             b_view.draw_self()
 

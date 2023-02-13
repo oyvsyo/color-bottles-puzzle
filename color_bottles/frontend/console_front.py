@@ -31,7 +31,7 @@ color_set_emoji: List[str] = [
 
 color_set = color_set_emoji
 
-if sys.platform == "win32":
+if sys.platform == "win32" or sys.platform == "cygwin":
     from colorama import Back, Style, just_fix_windows_console
 
     just_fix_windows_console()
@@ -138,10 +138,17 @@ def run_game(config: WorldConfig) -> None:
         bottles_ids: List[int] = parse_valid_bottles(turn, len(state.world.bottles))
 
         if bottles_ids:
-            for b1, b2 in zip(bottles_ids[:-1], bottles_ids[1:]):
-                state.world.bottles[b1].pour_to(state.world.bottles[b2])
+            state_changed = False
+            for b1, b2 in zip(bottles_ids[::2], bottles_ids[1::2]):
+                cant_pour = state.world.bottles[b1].pour_to(state.world.bottles[b2])
+                if cant_pour:
+                    print(cant_pour)
+                    break
+                else:
+                    state_changed = True
 
-            state.draw_world()
+            if state_changed:
+                state.draw_world()
 
             if state.world.is_solved:
                 game_ended = True
