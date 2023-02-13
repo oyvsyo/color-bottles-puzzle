@@ -1,6 +1,7 @@
 import logging
 from argparse import ArgumentParser
 from importlib import import_module, util
+from typing import List
 
 from color_bottles.core import WorldConfig
 
@@ -24,7 +25,7 @@ frontend_help = f"""
 """
 
 
-def get_available_frontends() -> list[str]:
+def get_available_frontends() -> List[str]:
     frontends = ["console"]
 
     for front in EXTRA_FRONTENDS:

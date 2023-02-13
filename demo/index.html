@@ -1,0 +1,95 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+
+<body>
+    <py-config type="toml">
+        terminal = true
+        packages = ["color-bottles-puzzle"]
+    </py-config>
+
+    <py-terminal id="py-terminal"></py-terminal>
+
+    <py-script>
+        from color_bottles.frontend.console_front import (
+            WorldConfig,
+            HELP,
+            GameStateView,
+            parse_valid_bottles,
+        )
+                    
+        def run_game(config: WorldConfig):
+            state = GameStateView(config)
+            print(HELP)
+            state.draw_world()
+            #print(state.world_str)
+
+            game_ended = False
+            running: bool = True
+            while running:
+                turn = yield
+
+                bottles_ids = parse_valid_bottles(turn, len(state.world.bottles))
+
+                if bottles_ids:
+                    state_changed = False
+                    for b1, b2 in zip(bottles_ids[::2], bottles_ids[1::2]):
+                        cant_pour = state.world.bottles[b1].pour_to(state.world.bottles[b2])
+                        if cant_pour:
+                            yield cant_pour
+                            break
+                        else:
+                            state_changed = True
+
+                    if state_changed:
+                        state.draw_world()
+                        #yield state.world_str
+
+                    if state.world.is_solved:
+                        game_ended = True
+                        print(" 🏆 You Win Congrats 🎉 !!!")
+                    elif state.world.is_no_move_left:
+                        game_ended = True
+                        print(" 📣 There is no move left ⛔️ !!!")
+
+                    if game_ended:
+                        play_new_game = yield
+                        if play_new_game == "n":
+                            state = GameStateView(config)  # type: ignore[no-redef]
+                            state.draw_world()
+                            #yield state.world_str
+                            game_ended = False
+                        else:
+                            running = False
+        
+        from argparse import ArgumentParser
+        parser = ArgumentParser(add_help=False)
+        conf = WorldConfig.from_parser(parser)
+        game_process = run_game(conf)
+        game_process.send(None)
+
+
+        from js import console
+
+        def my_function(*args, **kwargs):
+            console.log(f'args: {args}')
+            console.log(f'kwargs: {kwargs}')
+            
+            user_input = Element('test-input').element.value
+
+            print(user_input)
+            game_process.send(user_input)
+
+        
+    </py-script>
+
+    <div>Type an sample input here</div>
+    <input type="text" id="test-input"/>
+    <button id="submit-button" type="submit" py-onClick="my_function()">OK</button>
+
+</body>
+
+</html>

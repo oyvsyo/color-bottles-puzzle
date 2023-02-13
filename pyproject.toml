@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "color-bottles-puzzle"
-version = "0.0.2"
+version = "0.0.4"
 
 description = "Water color sort puzzle game"
 authors = ["Stepan Dvoiak <dvoiak.stepan@gmail.com>"]

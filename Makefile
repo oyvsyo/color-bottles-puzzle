@@ -51,7 +51,7 @@ build: install  ## Build dist to be ready to publish
 
 .PHONY: pypi
 pypi: build ## Upload the current version to PyPI
-	poetry publish --repository test_pypi
+	poetry publish
 
 
 # CLEAN #####################################################################

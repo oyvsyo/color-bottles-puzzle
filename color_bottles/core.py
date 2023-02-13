@@ -5,7 +5,7 @@ import sys
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from inspect import signature
-from typing import Generic, List, TypeVar
+from typing import Generic, List, Tuple, TypeVar
 
 T = TypeVar("T")
 
@@ -52,29 +52,42 @@ class StackBottle(Generic[T]):
             logger.debug("Added %s to bottle: %s", element, self)
             self.container.append(element)
 
-    def can_pour(self, another_bottle: "StackBottle") -> bool:
+    def can_pour(self, another_bottle: "StackBottle") -> Tuple[bool, str]:
         if self.is_empty:
-            logger.debug("Source bottle is empty %s", self)
-            return False
+            reason = f"Source bottle {self.name} is empty, there is nothing to pour"
+            logger.debug(reason)
+            return False, reason
         elif another_bottle.is_full:
-            logger.debug("Destination bottle is  %s", another_bottle)
-            return False
+            reason = f"Destination bottle {another_bottle.name} is already full of colors"
+            logger.debug(reason)
+            return False, reason
         elif another_bottle.is_empty:
-            return True
+            reason = f"Can pour anithing in empty bottle {self.name}"
+            logger.debug(reason)
+            return True, reason
         elif self.container[-1] != another_bottle.container[-1]:
-            logger.debug(
-                "Destination bottle %s have different element than source %s", another_bottle, self
+            reason = (
+                f"Destination bottle {another_bottle.name} have different top color "
+                f"{another_bottle.container[-1]} than source bottle {self.name} with top color {self.container[-1]}"
             )
-            return False
+            logger.debug(reason)
+            return False, reason
         elif another_bottle is self:
-            logger.debug("Cannot pour to itself %s", another_bottle)
-            return False
+            reason = f"Cannot pour to itself {self.name}"
+            logger.debug(reason)
+            return False, reason
         else:
-            return True
+            reason = f"Its ok to pour {self.name} to {another_bottle.name}"
+            return True, reason
 
-    def pour_to(self, another_bottle: "StackBottle") -> None:
-        while self.can_pour(another_bottle):
+    def pour_to(self, another_bottle: "StackBottle") -> str:
+        can_pour, reason = self.can_pour(another_bottle)
+        if not can_pour:
+            return reason
+
+        while self.can_pour(another_bottle)[0]:
             another_bottle.container.append(self.container.pop())
+        return ""
 
     def __repr__(self) -> str:
         return f"StackBottle(name={self.name})<{self.level}/{self._size}>:{self.container}"
@@ -159,8 +172,9 @@ class World(Generic[T]):
         for bottle1 in self.bottles:
             for bottle2 in self.bottles:
                 if bottle1 is not bottle2:
-                    if bottle1.can_pour(bottle2) or bottle2.can_pour(bottle1):
+                    if bottle1.can_pour(bottle2)[0] or bottle2.can_pour(bottle1)[0]:
                         return False
+
         return True
 
     @classmethod
